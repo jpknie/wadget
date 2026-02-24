@@ -8,8 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.jn.wadget.models.Category
-import com.jn.wadget.models.CategoryType
+import com.jn.wadget.models.dto.Category
 import com.jn.wadget.state.CategoryEditorState
 
 @Composable
@@ -56,7 +55,7 @@ fun CategoryRow(
 @Composable
 fun CategoryEditorScreen(
     state: CategoryEditorState,
-    onAddCategory: (String, CategoryType) -> Unit,
+    onAddCategory: (String) -> Unit,
     onEditCategory: (category: Category) -> Unit,
     onToggleMandatory: (category: Category, Boolean) -> Unit,
     onWeightChange: (category: Category, Float) -> Unit
@@ -100,7 +99,7 @@ fun CategoryEditorScreen(
 
             Button(onClick = {
                 if (newCategoryName.isNotBlank()) {
-                    onAddCategory(newCategoryName, CategoryType.EXPENSE)
+                    onAddCategory(newCategoryName)
                     newCategoryName = ""
                 }
             }) {

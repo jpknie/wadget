@@ -1,6 +1,6 @@
 package com.jn.wadget.state
 
-import com.jn.wadget.models.Category
+import com.jn.wadget.models.dto.Category
 
 data class CategoryEditorState(
     val categories: List<Category> = emptyList(),

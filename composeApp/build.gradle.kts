@@ -17,35 +17,52 @@ kotlin {
         }
     }
 
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "ComposeApp"
-            isStatic = true
-        }
-    }
-
     jvm()
 
     js {
         browser()
         binaries.executable()
     }
-
+/*
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         browser()
         binaries.executable()
     }
+*/
+    val iosArm64Target = iosArm64()
+    val iosSimTarget = iosSimulatorArm64()
+
+    listOf(iosArm64Target, iosSimTarget).forEach { target ->
+        target.binaries.framework {
+            baseName = "ComposeApp"
+            isStatic = true
+        }
+    }
+
+    val iosMain by sourceSets.creating {
+        dependsOn(sourceSets.getByName("commonMain"))
+        dependencies {
+            implementation("io.ktor:ktor-client-ios:2.3.7")
+        }
+    }
 
     sourceSets {
+        val commonMain by getting
+        val jvmMain by getting
+        val androidMain by getting
+
+        val jsMain by getting
+
         androidMain.dependencies {
+            implementation("io.ktor:ktor-client-okhttp:2.3.7")
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
         }
         commonMain.dependencies {
+            implementation("io.ktor:ktor-client-core:2.3.7")
+            implementation("io.ktor:ktor-client-content-negotiation:2.3.7")
+            implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.7")
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
@@ -59,9 +76,13 @@ kotlin {
             implementation(libs.kotlin.test)
         }
         jvmMain.dependencies {
+            implementation("io.ktor:ktor-client-cio:2.3.7")
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
         }
+        // Make both iOS targets depend on iosMain
+        val iosArm64Main by getting { dependsOn(iosMain) }
+        val iosSimulatorArm64Main by getting { dependsOn(iosMain) }
     }
 }
 

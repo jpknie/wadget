@@ -2,12 +2,12 @@ package com.jn.wadget.state
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.State
-import com.jn.wadget.models.Category
-import com.jn.wadget.models.CategoryType
-import com.jn.wadget.models.generateId
-import com.jn.wadget.repository.InMemoryCategoryRepository
+import androidx.lifecycle.ViewModel
+import com.jn.wadget.models.dto.Category
+import com.jn.wadget.models.dto.generateId
+import com.jn.wadget.repository.CategoryRepository
 
-class CategoryEditorViewModel(private val repository: InMemoryCategoryRepository) {
+class CategoryEditorViewModel(private val repository: CategoryRepository) : ViewModel() {
 
     // _state is a MutableState<CategoryEditorState>
     private var _state = mutableStateOf(CategoryEditorState())
@@ -23,8 +23,14 @@ class CategoryEditorViewModel(private val repository: InMemoryCategoryRepository
         )
     }
 
-    fun onAddCategory(name: String, type: CategoryType) {
-        repository.add(Category(id = generateId(), name = name, type = type))
+    suspend fun onAddCategory(name: String) {
+        repository.add(Category(
+            id = generateId(), name = name,
+            weight = 0f,
+            capCents = 0,
+            isMandatory = false,
+            mandatoryCents = 0
+        ))
         loadCategories()
     }
 
