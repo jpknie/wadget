@@ -6,7 +6,7 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import com.jn.wadget.computeclient.ComputeGatewayClientImpl
 import com.jn.wadget.repository.CategoryRepository
-import com.jn.wadget.state.CategoryEditorViewModel
+import com.jn.wadget.state.MainScreenViewModel
 
 fun main() = application {
     Window(
@@ -14,7 +14,7 @@ fun main() = application {
         title = "wadget",
     ) {
         val repo = remember { CategoryRepository(ComputeGatewayClientImpl()) }
-        val viewModel = remember { CategoryEditorViewModel(repo) }
+        val viewModel = remember { MainScreenViewModel() }
         App(viewModel)
     }
 }

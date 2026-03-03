@@ -1,4 +1,4 @@
-package com.jn.wadget.models.dto
+package com.jn.wadget.models
 
 import kotlin.random.Random
 

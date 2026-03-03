@@ -53,13 +53,13 @@ kotlin {
         val androidMain by getting
 
         val jsMain by getting
-
         androidMain.dependencies {
             implementation("io.ktor:ktor-client-okhttp:2.3.7")
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
         }
         commonMain.dependencies {
+            implementation("org.jetbrains.compose.material:material-icons-extended:1.7.3")
             implementation("io.ktor:ktor-client-core:2.3.7")
             implementation("io.ktor:ktor-client-content-negotiation:2.3.7")
             implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.7")

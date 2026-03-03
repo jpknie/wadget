@@ -1,6 +1,6 @@
 package com.jn.wadget.computeclient
 
-import com.jn.wadget.models.dto.Category
+import com.jn.wadget.models.Category
 
 class AllocationResult
 

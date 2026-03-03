@@ -1,7 +1,7 @@
 package com.jn.wadget.repository
 
 import com.jn.wadget.computeclient.ComputeGatewayClient
-import com.jn.wadget.models.dto.Category
+import com.jn.wadget.models.Category
 
 class CategoryRepository(
     private val computeGatewayClient: ComputeGatewayClient
@@ -13,7 +13,7 @@ class CategoryRepository(
         Category(name = "Hygiene", isMandatory = false, capCents = 0, mandatoryCents = 0, weight = 100f)
     )
 
-    fun getAll(): List<Category> = categories.toList()
+    suspend fun getAll(): List<Category> = computeGatewayClient.getCategories()
 
     suspend fun add(category: Category) {
         //categories.add(category)
