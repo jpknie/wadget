@@ -1,9 +1,6 @@
 package com.jn.wadget.ui.navigation
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
@@ -31,14 +28,9 @@ fun TopBar(drawerState: DrawerState,
         },
         navigationIcon = {
             IconButton(
-                onClick = {
-                    coroutineScope.launch { drawerState.open() }
-                }
+                onClick = { coroutineScope.launch { drawerState.open() } }
             ) {
-                Icon(
-                    imageVector = Icons.Default.Menu,
-                    contentDescription = "Menu"
-                )
+                Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
             }
         },
         actions = {

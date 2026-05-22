@@ -1,8 +1,10 @@
 package com.jn.wadget.models
 
+import kotlinx.serialization.Serializable
 import kotlin.random.Random
 
 
+@Serializable
 data class Category(
     val id: Long = generateId(),
     val name: String,

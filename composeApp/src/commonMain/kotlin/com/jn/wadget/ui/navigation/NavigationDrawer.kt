@@ -1,3 +1,5 @@
+package com.jn.wadget.ui.navigation
+
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -7,17 +9,20 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.jn.wadget.state.CategoryEditorViewModel
 import com.jn.wadget.state.MainScreenState
 import com.jn.wadget.state.Screens
-import com.jn.wadget.ui.navigation.TopBar
+import com.jn.wadget.ui.CategoryEditorScreen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NavigationDrawer(state: MainScreenState) {
+fun NavigationDrawer(state: MainScreenState,
+                     categoryEditorViewModel: CategoryEditorViewModel) {
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -102,7 +107,33 @@ fun NavigationDrawer(state: MainScreenState) {
                         Text("HomeScreen")
                     }
                     Screens.CategoryScreen -> {
-                        Text("CategoryScreen")
+                        val categoryState by categoryEditorViewModel.state
+                        CategoryEditorScreen(
+                            state = categoryState,
+                            onAddCategory = { name ->
+                                scope.launch {
+                                    categoryEditorViewModel.onAddCategory(name)
+                                }
+                            },
+                            onEditCategory = {
+                                scope.launch {
+                                    categoryEditorViewModel.onEditCategory(it)
+                                }
+                            },
+                            onToggleMandatory = { category, isMandatory ->
+                                scope.launch {
+                                    categoryEditorViewModel.onToggleMandatory(
+                                        category,
+                                        isMandatory
+                                    )
+                                }
+                            },
+                            onWeightChange = { category, weight ->
+                                scope.launch {
+                                    categoryEditorViewModel.onWeightChange(category, weight)
+                                }
+                            }
+                        )
                     }
                     Screens.SettingsScreen -> {
                         Text("SettingsScreen")

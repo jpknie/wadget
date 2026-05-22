@@ -16,12 +16,10 @@ class CategoryRepository(
     suspend fun getAll(): List<Category> = computeGatewayClient.getCategories()
 
     suspend fun add(category: Category) {
-        //categories.add(category)
         computeGatewayClient.addCategory(category)
     }
 
-    fun update(category: Category) {
-        val index = categories.indexOfFirst { it.id == category.id }
-        if (index >= 0) categories[index] = category
+    suspend fun update(category: Category) {
+        computeGatewayClient.updateCategory(category)
     }
 }
