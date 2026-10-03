@@ -1,4 +1,4 @@
-project('budgeteer', 'cpp', default_options: ['cpp_std=c++20'])
+project('budget-engine', 'cpp', default_options: ['cpp_std=c++20'])
 
 threads = dependency('threads')
 openssl = dependency('openssl')
@@ -23,7 +23,7 @@ certs = custom_target('dev-certs',
   console: true
 )
 
-exe = executable('budgeteer', srcs,
+exe = executable('budget-engine', srcs,
   include_directories: include_directories('third_party','include'),
   dependencies: [threads, openssl],
   install: true
