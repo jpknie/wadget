@@ -13,16 +13,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.jn.wadget.state.CategoryEditorViewModel
+import com.jn.wadget.state.TagEditorViewModel
 import com.jn.wadget.state.MainScreenState
 import com.jn.wadget.state.Screens
-import com.jn.wadget.ui.CategoryEditorScreen
+import com.jn.wadget.ui.TagEditorScreen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationDrawer(state: MainScreenState,
-                     categoryEditorViewModel: CategoryEditorViewModel) {
+                     tagEditorViewModel: TagEditorViewModel) {
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -53,10 +53,10 @@ fun NavigationDrawer(state: MainScreenState,
                 NavigationDrawerItem(
                     icon = { Icon(Icons.Default.Category, contentDescription = null) },
                     label = { Text("Categories") },
-                    selected = state.currentScreen == Screens.CategoryScreen,
+                    selected = state.currentScreen == Screens.TagScreen,
                     onClick = {
                         scope.launch {
-                            state.currentScreen = Screens.CategoryScreen
+                            state.currentScreen = Screens.TagScreen
                             drawerState.close()
                         }
                     }
@@ -106,31 +106,37 @@ fun NavigationDrawer(state: MainScreenState,
                     Screens.HomeScreen -> {
                         Text("HomeScreen")
                     }
-                    Screens.CategoryScreen -> {
-                        val categoryState by categoryEditorViewModel.state
-                        CategoryEditorScreen(
-                            state = categoryState,
-                            onAddCategory = { name ->
+                    Screens.TagScreen -> {
+                        val tagState by tagEditorViewModel.state
+                        TagEditorScreen(
+                            state = tagState,
+                            onAddTag = { name ->
                                 scope.launch {
-                                    categoryEditorViewModel.onAddCategory(name)
+                                    tagEditorViewModel.onAddTag(name)
                                 }
                             },
-                            onEditCategory = {
+                            onEditTag = {
                                 scope.launch {
-                                    categoryEditorViewModel.onEditCategory(it)
+                                    tagEditorViewModel.onEditTag(it)
                                 }
                             },
-                            onToggleMandatory = { category, isMandatory ->
+                            onToggleMandatory = { tag, isMandatory ->
                                 scope.launch {
-                                    categoryEditorViewModel.onToggleMandatory(
-                                        category,
+                                    tagEditorViewModel.onToggleMandatory(
+                                        tag,
                                         isMandatory
                                     )
                                 }
                             },
-                            onWeightChange = { category, weight ->
+                            onWeightChange = { tag, weight ->
                                 scope.launch {
-                                    categoryEditorViewModel.onWeightChange(category, weight)
+                                    tagEditorViewModel.onWeightChange(tag, weight)
+                                }
+                            },
+                            
+                            onDeleteTag = { tag ->
+                                scope.launch {
+                                    tagEditorViewModel.onDeleteTag(tag)
                                 }
                             }
                         )
@@ -150,18 +156,18 @@ fun NavigationDrawer(state: MainScreenState,
 Card(modifier = Modifier.fillMaxWidth()) {
 
     when(state.currentScreen) {
-        Screens.CategoryScreen -> {
-            val categoryState by categoryEditorViewModel.state
-            CategoryEditorScreen(
-                state = categoryState,
-                onAddCategory = { name ->
+        Screens.TagScreen -> {
+            val tagState by tagEditorViewModel.state
+            TagEditorScreen(
+                state = tagState,
+                onAddTag = { name ->
                     scope.launch {
-                        categoryEditorViewModel.onAddCategory(name)
+                        tagEditorViewModel.onAddTag(name)
                     }
                 },
-                onEditCategory = { categoryEditorViewModel.onEditCategory(it) },
-                onToggleMandatory = { category, isMandatory -> categoryEditorViewModel.onToggleMandatory(category, isMandatory) },
-                onWeightChange = { category, weight -> categoryEditorViewModel.onWeightChange(category, weight) }
+                onEditTag = { tagEditorViewModel.onEditTag(it) },
+                onToggleMandatory = { tag, isMandatory -> tagEditorViewModel.onToggleMandatory(tag, isMandatory) },
+                onWeightChange = { tag, weight -> tagEditorViewModel.onWeightChange(tag, weight) }
             )
         }
     }

@@ -8,27 +8,32 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.jn.wadget.models.Category
-import com.jn.wadget.state.CategoryEditorState
+import com.jn.domain.Tag
+import com.jn.wadget.state.TagEditorState
 
 @Composable
-fun CategoryRow(
-    category: Category,
+fun TagRow(
+    tag: Tag,
     onToggleMandatory: (Boolean) -> Unit,
-    onWeightChange: (Float) -> Unit,
-    onEdit: () -> Unit
+    onWeightChange: (Double) -> Unit,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit
 ) {
+    var sliderValue by remember(tag.id, tag.weight) {
+        mutableStateOf(tag.weight.toFloat())
+    }
+
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(12.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = category.name,
+                    text = tag.name,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.weight(1f)
                 )
 
                 Switch(
-                    checked = category.isMandatory,
+                    checked = tag.mandatory,
                     onCheckedChange = onToggleMandatory
                 )
             }
@@ -36,12 +41,21 @@ fun CategoryRow(
             Spacer(modifier = Modifier.height(8.dp))
 
             Slider(
-                value = category.weight,
-                onValueChange = onWeightChange,
+                value = sliderValue,
+                onValueChange = {
+                    sliderValue = it
+                },
+                onValueChangeFinished = {
+                    onWeightChange(sliderValue.toDouble())
+                },
                 valueRange = 0f..100f
             )
 
-            Text("Weight: ${category.weight.toInt()}%")
+            Text("Weight: ${sliderValue.toInt()}%")
+
+            TextButton(onClick = onDelete) {
+                Text("Delete")
+            }
 
             Spacer(modifier = Modifier.height(4.dp))
 
@@ -53,14 +67,15 @@ fun CategoryRow(
 }
 
 @Composable
-fun CategoryEditorScreen(
-    state: CategoryEditorState,
-    onAddCategory: (String) -> Unit,
-    onEditCategory: (category: Category) -> Unit,
-    onToggleMandatory: (category: Category, Boolean) -> Unit,
-    onWeightChange: (category: Category, Float) -> Unit
+fun TagEditorScreen(
+    state: TagEditorState,
+    onAddTag: (String) -> Unit,
+    onEditTag: (tag: Tag) -> Unit,
+    onToggleMandatory: (tag: Tag, Boolean) -> Unit,
+    onWeightChange: (tag: Tag, Double) -> Unit,
+    onDeleteTag: (tag: Tag) -> Unit
 ) {
-    var newCategoryName by remember { mutableStateOf("") }
+    var newTagName by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -74,23 +89,24 @@ fun CategoryEditorScreen(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(state.categories, key = { it.id }) { category ->
-                CategoryRow(
-                    category = category,
-                    onToggleMandatory = { newValue -> onToggleMandatory(category, newValue) },
-                    onWeightChange = { newWeight -> onWeightChange(category, newWeight) },
-                    onEdit = { onEditCategory(category) }
+            items(state.tags, key = { it.id }) { tag ->
+                TagRow(
+                    tag = tag,
+                    onToggleMandatory = { newValue -> onToggleMandatory(tag, newValue) },
+                    onWeightChange = { newWeight -> onWeightChange(tag, newWeight) },
+                    onEdit = { onEditTag(tag) },
+                    onDelete = { onDeleteTag(tag) }
                 )
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Add new category section
+        // Add new tag section
         Row(verticalAlignment = Alignment.CenterVertically) {
             TextField(
-                value = newCategoryName,
-                onValueChange = { newCategoryName = it },
+                value = newTagName,
+                onValueChange = { newTagName = it },
                 modifier = Modifier.weight(1f),
                 label = { Text("New category") }
             )
@@ -98,9 +114,9 @@ fun CategoryEditorScreen(
             Spacer(modifier = Modifier.width(8.dp))
 
             Button(onClick = {
-                if (newCategoryName.isNotBlank()) {
-                    onAddCategory(newCategoryName)
-                    newCategoryName = ""
+                if (newTagName.isNotBlank()) {
+                    onAddTag(newTagName)
+                    newTagName = ""
                 }
             }) {
                 Text("Add")

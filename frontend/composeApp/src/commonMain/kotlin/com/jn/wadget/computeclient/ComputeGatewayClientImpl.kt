@@ -1,7 +1,7 @@
 package com.jn.wadget.computeclient
 
 
-import com.jn.wadget.models.Category
+import com.jn.domain.Tag
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -13,9 +13,8 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
-
 class ComputeGatewayClientImpl(
-    private val baseUrl: String = "http://localhost:8080" + ApiConstants.CATEGORIES
+    private val baseUrl: String = "http://localhost:8080" + ApiConstants.TAGS
 ): ComputeGatewayClient {
 
     private val client = HttpClient(provideEngine())
@@ -27,30 +26,30 @@ class ComputeGatewayClientImpl(
         }
     }
 
-    override suspend fun getCategories(): List<Category> {
+    override suspend fun getTags(): List<Tag> {
         return client.get(baseUrl).body()
     }
 
-    override suspend fun getCategory(id: Long): Category? {
-        return client.get("$baseUrl/{id}").body()
+    override suspend fun getTag(id: String): Tag? {
+        return client.get("$baseUrl/$id").body()
     }
 
-    override suspend fun addCategory(category: Category) {
+    override suspend fun addTag(tag: Tag) {
         client.post(baseUrl) {
-            setBody(category)
+            setBody(tag)
             contentType(ContentType.Application.Json)
         }
     }
 
-    override suspend fun updateCategory(category: Category) {
+    override suspend fun updateTag(tag: Tag) {
         client.put(baseUrl) {
-            setBody(category)
+            setBody(tag)
             contentType(ContentType.Application.Json)
         }
     }
 
-    override suspend fun deleteCategory(id: Long) {
-        client.delete("$baseUrl/{id}")
+    override suspend fun deleteTag(id: String) {
+        client.delete("$baseUrl/$id")
     }
 
     override suspend fun computeAllocation(): List<AllocationResult> {

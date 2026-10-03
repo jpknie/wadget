@@ -5,6 +5,8 @@ plugins {
     kotlin("plugin.spring") version "1.8.22"
     kotlin("plugin.jpa") version "1.8.22"
     kotlin("plugin.noarg") version "1.8.22"
+    kotlin("multiplatform") version "1.8.22" apply false
+    kotlin("plugin.serialization") version "1.8.22" apply false
 }
 
 
@@ -26,6 +28,7 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":shared-domain"))
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-actuator")

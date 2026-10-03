@@ -1,11 +1,12 @@
 package com.jn.compute.controllers
 
 import com.jn.compute.controllers.constants.ControllerConstants
-import com.jn.compute.models.entity.Tag
+import com.jn.domain.Tag
 import com.jn.compute.services.TagService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -28,5 +29,14 @@ class TagController(private val tagService: TagService)
 
     @GetMapping("/{tagId}")
     fun getTagById(@PathVariable tagId: String): Tag = tagService.getTagById(tagId)
+
+    @GetMapping
+    fun getAllTags(): List<Tag> = tagService.getAllTags()
+
+    @PutMapping
+    fun updateTag(@RequestBody tag: Tag): ResponseEntity<Tag> {
+      val savedTag = tagService.saveTag(tag)
+      return ResponseEntity.ok(savedTag)
+    }
 
 }

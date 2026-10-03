@@ -5,7 +5,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.darwin.Darwin
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
-import com.jn.wadget.models.dto.Category
+import com.jn.domain.Tag
 
 class ComputeGatewayClientImpl(
     private val baseUrl: String = "http://192.168.0.1:3333"
@@ -15,15 +15,15 @@ class ComputeGatewayClientImpl(
         install(ContentNegotiation) { json() }
     }
 
-    override suspend fun getCategories(): List<Category> {
+    override suspend fun getTags(): List<Tag> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun addCategory(category: Category) {
+    override suspend fun addTag(tag: Tag) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun updateCategory(category: Category) {
+    override suspend fun updateTag(tag: Tag) {
         TODO("Not yet implemented")
     }
 

@@ -5,7 +5,7 @@ import androidx.compose.runtime.State
 import androidx.lifecycle.ViewModel
 
 class MainScreenViewModel: ViewModel() {
-    // _state is a MutableState<CategoryEditorState>
+    // _state is a MutableState<TagEditorState>
     private var _state = mutableStateOf(MainScreenState())
     val state: State<MainScreenState> get() = _state
 

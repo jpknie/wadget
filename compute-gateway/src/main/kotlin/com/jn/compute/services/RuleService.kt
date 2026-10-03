@@ -1,7 +1,6 @@
 package com.jn.compute.services
 
-import com.jn.compute.models.entity.Rule
-import com.jn.compute.models.entity.Tag
+import com.jn.domain.Rule
 
 interface RuleService {
     fun getRuleById(ruleId: String): Rule

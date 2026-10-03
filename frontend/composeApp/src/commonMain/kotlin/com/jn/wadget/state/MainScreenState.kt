@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 
 enum class Screens {
     HomeScreen,
-    CategoryScreen,
+    TagScreen,
     SettingsScreen,
     AboutScreen
 }

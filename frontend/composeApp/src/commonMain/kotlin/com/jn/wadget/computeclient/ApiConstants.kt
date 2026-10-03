@@ -1,8 +1,8 @@
 package com.jn.wadget.computeclient
 
 object ApiConstants {
-    const val BASE_API_URL = "/api/v1/"
-    const val CATEGORIES = BASE_API_URL + "categories"
+    const val BASE_API_URL = "/api/v1"
+    const val TAGS = BASE_API_URL + "/tags"
 
-    fun category(id: Long) = "$BASE_API_URL/categories/$id"
+    fun tag(id: String) = "$TAGS/$id"
 }

@@ -1,5 +1,6 @@
 package com.jn.compute.models.entity
 
+import com.jn.domain.MatchMode
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
@@ -23,5 +24,3 @@ data class Rule(
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "tag_id", nullable = false)
     val tag: Tag
 )
-
-enum class MatchMode { CONTAINS, EQUALS, REGEXP }

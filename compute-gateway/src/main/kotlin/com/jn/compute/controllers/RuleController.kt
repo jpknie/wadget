@@ -1,7 +1,7 @@
 package com.jn.compute.controllers
 
 import com.jn.compute.controllers.constants.ControllerConstants
-import com.jn.compute.models.entity.Rule
+import com.jn.domain.Rule
 import com.jn.compute.services.RuleService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
