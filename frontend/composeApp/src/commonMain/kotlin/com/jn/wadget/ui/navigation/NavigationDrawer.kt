@@ -1,10 +1,6 @@
 package com.jn.wadget.ui.navigation
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Category
@@ -21,8 +17,7 @@ import com.jn.wadget.state.TagEditorViewModel
 import com.jn.wadget.state.MainScreenState
 import com.jn.wadget.state.Screens
 import com.jn.wadget.ui.TagEditorScreen
-import com.jn.wadget.ui.theme.WadgetColors
-import com.jn.wadget.ui.theme.WadgetShapes
+import com.jn.wadget.ui.theme.WadgetPalette
 import com.jn.wadget.ui.theme.WadgetSpacing
 import kotlinx.coroutines.launch
 
@@ -33,42 +28,38 @@ fun NavigationDrawer(state: MainScreenState,
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val drawerItemColors = NavigationDrawerItemDefaults.colors(
-        selectedContainerColor = WadgetColors.AccentContainer,
-        unselectedContainerColor = WadgetColors.Background,
-        selectedIconColor = WadgetColors.Accent,
-        unselectedIconColor = WadgetColors.Muted,
-        selectedTextColor = WadgetColors.Accent,
-        unselectedTextColor = WadgetColors.Muted
+    val itemColors = NavigationDrawerItemDefaults.colors(
+        selectedContainerColor = WadgetPalette.TealSubtle,
+        selectedIconColor = WadgetPalette.Teal,
+        selectedTextColor = WadgetPalette.Text,
+        unselectedContainerColor = WadgetPalette.Surface,
+        unselectedIconColor = WadgetPalette.Muted,
+        unselectedTextColor = WadgetPalette.Muted
     )
-    val drawerItemModifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
 
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet(
-                drawerContainerColor = WadgetColors.Background,
-                drawerContentColor = WadgetColors.Text
+                drawerContainerColor = WadgetPalette.Surface,
+                drawerContentColor = WadgetPalette.Text,
+                drawerTonalElevation = 0.dp
             ) {
-                Column(modifier = Modifier.padding(WadgetSpacing.Large)) {
-                    Text("Wadget", style = MaterialTheme.typography.titleLarge)
-                    Spacer(Modifier.height(WadgetSpacing.Small))
-                    Text(
-                        "Navigation",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = WadgetColors.Muted
-                    )
-                }
-                HorizontalDivider(color = WadgetColors.Border)
-                Spacer(Modifier.height(WadgetSpacing.Small))
+
+                Text(
+                    "Navigation",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = WadgetPalette.Muted,
+                    modifier = Modifier.padding(WadgetSpacing.Large)
+                )
 
                 NavigationDrawerItem(
+                    modifier = Modifier.padding(horizontal = WadgetSpacing.Small, vertical = 4.dp),
+                    shape = MaterialTheme.shapes.small,
+                    colors = itemColors,
                     icon = { Icon(Icons.Default.Home, contentDescription = null) },
                     label = { Text("Home") },
                     selected = state.currentScreen == Screens.HomeScreen,
-                    modifier = drawerItemModifier,
-                    shape = WadgetShapes.Control,
-                    colors = drawerItemColors,
                     onClick = {
                         scope.launch {
                             state.currentScreen = Screens.HomeScreen
@@ -78,12 +69,12 @@ fun NavigationDrawer(state: MainScreenState,
                 )
 
                 NavigationDrawerItem(
+                    modifier = Modifier.padding(horizontal = WadgetSpacing.Small, vertical = 4.dp),
+                    shape = MaterialTheme.shapes.small,
+                    colors = itemColors,
                     icon = { Icon(Icons.Default.Category, contentDescription = null) },
                     label = { Text("Categories") },
                     selected = state.currentScreen == Screens.TagScreen,
-                    modifier = drawerItemModifier,
-                    shape = WadgetShapes.Control,
-                    colors = drawerItemColors,
                     onClick = {
                         scope.launch {
                             state.currentScreen = Screens.TagScreen
@@ -93,12 +84,12 @@ fun NavigationDrawer(state: MainScreenState,
                 )
 
                 NavigationDrawerItem(
+                    modifier = Modifier.padding(horizontal = WadgetSpacing.Small, vertical = 4.dp),
+                    shape = MaterialTheme.shapes.small,
+                    colors = itemColors,
                     icon = { Icon(Icons.Default.Settings, contentDescription = null) },
                     label = { Text("Settings") },
                     selected = state.currentScreen == Screens.SettingsScreen,
-                    modifier = drawerItemModifier,
-                    shape = WadgetShapes.Control,
-                    colors = drawerItemColors,
                     onClick = {
                         state.currentScreen = Screens.SettingsScreen
                         scope.launch { drawerState.close() }
@@ -106,12 +97,12 @@ fun NavigationDrawer(state: MainScreenState,
                 )
 
                 NavigationDrawerItem(
+                    modifier = Modifier.padding(horizontal = WadgetSpacing.Small, vertical = 4.dp),
+                    shape = MaterialTheme.shapes.small,
+                    colors = itemColors,
                     icon = { Icon(Icons.Default.Info, contentDescription = null) },
                     label = { Text("About") },
                     selected = state.currentScreen == Screens.AboutScreen,
-                    modifier = drawerItemModifier,
-                    shape = WadgetShapes.Control,
-                    colors = drawerItemColors,
                     onClick = {
                         scope.launch {
                             state.currentScreen = Screens.AboutScreen
@@ -124,14 +115,14 @@ fun NavigationDrawer(state: MainScreenState,
     ) {
 
         Scaffold(
-            containerColor = WadgetColors.Background,
-            contentColor = WadgetColors.Text,
+            containerColor = WadgetPalette.Canvas,
             topBar = {
                 TopBar(drawerState, scope)
             }
         ) { paddingValues ->
 
-            Box(
+            Surface(
+                color = MaterialTheme.colorScheme.background,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)

@@ -13,123 +13,93 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-object WadgetColors {
-    val Background = Color(0xFF111518)
-    val Surface = Color(0xFF1A2024)
-    val Elevated = Color(0xFF222B30)
-    val Border = Color(0xFF344047)
-    val Accent = Color(0xFF80CFC1)
-    val AccentContainer = Color(0xFF273E3A)
-    val OnAccent = Color(0xFF102521)
-    val Text = Color(0xFFE8EFEE)
-    val Muted = Color(0xFFA0AFB5)
-    val Danger = Color(0xFFE5AAA5)
-    val DangerContainer = Color(0xFF422E2E)
+object WadgetPalette {
+    val Canvas = Color(0xFF121619)
+    val Surface = Color(0xFF1B2227)
+    val Raised = Color(0xFF242D33)
+    val Border = Color(0xFF354149)
+    val Text = Color(0xFFF3F1EB)
+    val Muted = Color(0xFFAAB7BF)
+    val Teal = Color(0xFF63C6B0)
+    val TealPressed = Color(0xFF87D7C5)
+    val TealSubtle = Color(0xFF223F39)
+    val Destructive = Color(0xFFFF9A96)
 }
 
 object WadgetSpacing {
     val Small = 8.dp
     val Medium = 16.dp
     val Large = 24.dp
-    val ExtraLarge = 32.dp
+    val EditorWidth = 800.dp
+    val TouchTarget = 48.dp
 }
 
-object WadgetShapes {
-    val Card = RoundedCornerShape(18.dp)
-    val Control = RoundedCornerShape(12.dp)
-}
-
-private val WadgetColorScheme = darkColorScheme(
-    primary = WadgetColors.Accent,
-    onPrimary = WadgetColors.OnAccent,
-    primaryContainer = WadgetColors.AccentContainer,
-    onPrimaryContainer = WadgetColors.Accent,
-    secondary = WadgetColors.Accent,
-    onSecondary = WadgetColors.OnAccent,
-    secondaryContainer = WadgetColors.AccentContainer,
-    onSecondaryContainer = WadgetColors.Accent,
-    tertiary = WadgetColors.Accent,
-    onTertiary = WadgetColors.OnAccent,
-    tertiaryContainer = WadgetColors.AccentContainer,
-    onTertiaryContainer = WadgetColors.Accent,
-    background = WadgetColors.Background,
-    onBackground = WadgetColors.Text,
-    surface = WadgetColors.Surface,
-    onSurface = WadgetColors.Text,
-    surfaceVariant = WadgetColors.Elevated,
-    onSurfaceVariant = WadgetColors.Muted,
-    surfaceTint = Color.Transparent,
-    surfaceDim = WadgetColors.Background,
-    surfaceBright = WadgetColors.Elevated,
-    surfaceContainerLowest = WadgetColors.Background,
-    surfaceContainerLow = WadgetColors.Surface,
-    surfaceContainer = WadgetColors.Surface,
-    surfaceContainerHigh = WadgetColors.Elevated,
-    surfaceContainerHighest = WadgetColors.Elevated,
-    inverseSurface = WadgetColors.Text,
-    inverseOnSurface = WadgetColors.Background,
-    inversePrimary = WadgetColors.OnAccent,
-    outline = WadgetColors.Muted,
-    outlineVariant = WadgetColors.Border,
-    error = WadgetColors.Danger,
-    onError = WadgetColors.Background,
-    errorContainer = WadgetColors.DangerContainer,
-    onErrorContainer = WadgetColors.Danger
-)
-
-private val WadgetTypography = Typography(
+private val wadgetTypography = Typography(
     headlineMedium = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 28.sp,
-        lineHeight = 36.sp,
-        letterSpacing = (-0.5).sp
+        fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.SemiBold,
+        fontSize = 30.sp, lineHeight = 38.sp, letterSpacing = (-0.5).sp
     ),
     titleLarge = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 22.sp,
-        lineHeight = 28.sp
+        fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.SemiBold,
+        fontSize = 22.sp, lineHeight = 30.sp
     ),
     titleMedium = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 16.sp,
-        lineHeight = 24.sp
+        fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.SemiBold,
+        fontSize = 18.sp, lineHeight = 26.sp
     ),
     bodyLarge = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontSize = 16.sp,
-        lineHeight = 24.sp
+        fontFamily = FontFamily.SansSerif, fontSize = 16.sp, lineHeight = 24.sp
     ),
     bodyMedium = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontSize = 14.sp,
-        lineHeight = 20.sp
+        fontFamily = FontFamily.SansSerif, fontSize = 14.sp, lineHeight = 20.sp
     ),
     labelLarge = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 14.sp,
-        lineHeight = 20.sp
+        fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.SemiBold,
+        fontSize = 14.sp, lineHeight = 20.sp
     ),
-    labelMedium = TextStyle(
-        fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.Medium,
-        fontSize = 12.sp,
-        lineHeight = 16.sp
+    labelSmall = TextStyle(
+        fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Medium,
+        fontSize = 12.sp, lineHeight = 16.sp
     )
 )
 
 @Composable
 fun WadgetTheme(content: @Composable () -> Unit) {
     MaterialTheme(
-        colorScheme = WadgetColorScheme,
-        typography = WadgetTypography,
+        colorScheme = darkColorScheme(
+            primary = WadgetPalette.Teal,
+            onPrimary = WadgetPalette.Canvas,
+            primaryContainer = WadgetPalette.TealSubtle,
+            onPrimaryContainer = WadgetPalette.Teal,
+            secondary = WadgetPalette.Teal,
+            onSecondary = WadgetPalette.Canvas,
+            secondaryContainer = WadgetPalette.TealSubtle,
+            onSecondaryContainer = WadgetPalette.Text,
+            tertiary = WadgetPalette.Teal,
+            background = WadgetPalette.Canvas,
+            onBackground = WadgetPalette.Text,
+            surface = WadgetPalette.Surface,
+            onSurface = WadgetPalette.Text,
+            surfaceVariant = WadgetPalette.Raised,
+            onSurfaceVariant = WadgetPalette.Muted,
+            surfaceTint = WadgetPalette.Teal,
+            surfaceContainerLowest = WadgetPalette.Canvas,
+            surfaceContainerLow = WadgetPalette.Surface,
+            surfaceContainer = WadgetPalette.Surface,
+            surfaceContainerHigh = WadgetPalette.Raised,
+            surfaceContainerHighest = WadgetPalette.Raised,
+            outline = WadgetPalette.Muted,
+            outlineVariant = WadgetPalette.Border,
+            error = WadgetPalette.Destructive,
+            onError = WadgetPalette.Canvas
+        ),
+        typography = wadgetTypography,
         shapes = Shapes(
-            small = WadgetShapes.Control,
-            medium = WadgetShapes.Card,
-            large = WadgetShapes.Card
+            extraSmall = RoundedCornerShape(6.dp),
+            small = RoundedCornerShape(10.dp),
+            medium = RoundedCornerShape(14.dp),
+            large = RoundedCornerShape(18.dp),
+            extraLarge = RoundedCornerShape(24.dp)
         ),
         content = content
     )

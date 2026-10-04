@@ -1,29 +1,30 @@
 package com.jn.wadget.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.interaction.collectIsHoveredAsState
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.border
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.jn.domain.Tag
 import com.jn.wadget.state.TagEditorState
-import com.jn.wadget.ui.components.WadgetButton
-import com.jn.wadget.ui.components.WadgetCard
-import com.jn.wadget.ui.components.WadgetIconAction
-import com.jn.wadget.ui.components.WadgetWeightSlider
-import com.jn.wadget.ui.theme.WadgetColors
-import com.jn.wadget.ui.theme.WadgetShapes
+import com.jn.wadget.ui.components.*
+import com.jn.wadget.ui.theme.WadgetPalette
 import com.jn.wadget.ui.theme.WadgetSpacing
 
 @Composable
@@ -38,83 +39,74 @@ fun TagRow(
         mutableStateOf(tag.weight.toFloat())
     }
 
-    WadgetCard(modifier = Modifier.fillMaxWidth()) {
+    WadgetSurface(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(WadgetSpacing.Medium)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = tag.name,
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(end = WadgetSpacing.Small)
+                    modifier = Modifier.weight(1f).padding(end = WadgetSpacing.Small)
                 )
-
+                WadgetIconAction(Icons.Outlined.Edit, "Edit ${tag.name}", onEdit)
                 WadgetIconAction(
-                    icon = Icons.Outlined.Edit,
-                    description = "Edit ${tag.name}",
-                    onClick = onEdit
-                )
-                WadgetIconAction(
-                    icon = Icons.Outlined.Delete,
-                    description = "Delete ${tag.name}",
-                    onClick = onDelete,
-                    destructive = true
+                    Icons.Outlined.Delete, "Delete ${tag.name}", onDelete, destructive = true
                 )
             }
-
-            HorizontalDivider(
-                modifier = Modifier.padding(vertical = WadgetSpacing.Small),
-                color = WadgetColors.Border
-            )
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text("Mandatory", style = MaterialTheme.typography.bodyMedium)
-                    Text(
-                        if (tag.mandatory) "Required category" else "Optional category",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = WadgetColors.Muted
-                    )
-                }
+            Spacer(Modifier.height(WadgetSpacing.Small))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "Mandatory",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = WadgetPalette.Muted,
+                    modifier = Modifier.weight(1f).padding(end = WadgetSpacing.Small)
+                )
+                val source = remember { MutableInteractionSource() }
+                val focused by source.collectIsFocusedAsState()
+                val hovered by source.collectIsHoveredAsState()
+                val pressed by source.collectIsPressedAsState()
+                val border by animateColorAsState(
+                    if (focused || pressed) WadgetPalette.Teal
+                    else if (hovered) WadgetPalette.Border else Color.Transparent,
+                    animationSpec = tween(120)
+                )
                 Switch(
                     checked = tag.mandatory,
                     onCheckedChange = onToggleMandatory,
-                    modifier = Modifier.semantics {
-                        contentDescription = "Mandatory for ${tag.name}"
-                    },
+                    interactionSource = source,
+                    modifier = Modifier.width(64.dp).heightIn(min = WadgetSpacing.TouchTarget)
+                        .border(1.dp, border, MaterialTheme.shapes.small)
+                        .semantics { contentDescription = "Mandatory for ${tag.name}" },
                     colors = SwitchDefaults.colors(
-                        checkedThumbColor = WadgetColors.OnAccent,
-                        checkedTrackColor = WadgetColors.Accent,
-                        checkedBorderColor = WadgetColors.Accent,
-                        uncheckedThumbColor = WadgetColors.Muted,
-                        uncheckedTrackColor = WadgetColors.Elevated,
-                        uncheckedBorderColor = WadgetColors.Border
+                        checkedThumbColor = WadgetPalette.Canvas,
+                        checkedTrackColor = WadgetPalette.Teal,
+                        checkedBorderColor = WadgetPalette.Teal,
+                        uncheckedThumbColor = WadgetPalette.Muted,
+                        uncheckedTrackColor = WadgetPalette.Raised,
+                        uncheckedBorderColor = WadgetPalette.Border
                     )
                 )
             }
-
-            Spacer(modifier = Modifier.height(WadgetSpacing.Medium))
-
+            Spacer(Modifier.height(WadgetSpacing.Small))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     "Weight",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = WadgetColors.Muted
+                    color = WadgetPalette.Muted,
+                    modifier = Modifier.weight(1f)
                 )
                 Text(
                     "${sliderValue.toInt()}%",
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontFeatureSettings = "tnum"
-                    ),
-                    color = WadgetColors.Accent
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = WadgetPalette.Text
                 )
             }
-
-            WadgetWeightSlider(
+            WadgetSlider(
                 value = sliderValue,
                 onValueChange = {
                     sliderValue = it
@@ -122,16 +114,8 @@ fun TagRow(
                 onValueChangeFinished = {
                     onWeightChange(sliderValue.toDouble())
                 },
-                modifier = Modifier.fillMaxWidth()
+                description = "Weight for ${tag.name}"
             )
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text("0%", style = MaterialTheme.typography.labelMedium, color = WadgetColors.Muted)
-                Text("100%", style = MaterialTheme.typography.labelMedium, color = WadgetColors.Muted)
-            }
         }
     }
 }
@@ -147,78 +131,35 @@ fun TagEditorScreen(
 ) {
     var newTagName by remember { mutableStateOf("") }
 
-    BoxWithConstraints(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(WadgetColors.Background),
-        contentAlignment = Alignment.TopCenter
-    ) {
+    BoxWithConstraints(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
         val compact = maxWidth < 480.dp
-        val padding = if (compact) WadgetSpacing.Medium else WadgetSpacing.Large
+        val gutter = if (compact) WadgetSpacing.Medium else WadgetSpacing.Large
         Column(
             modifier = Modifier
-                .widthIn(max = 880.dp)
+                .widthIn(max = WadgetSpacing.EditorWidth)
                 .fillMaxSize()
-                .padding(padding)
+                .padding(horizontal = gutter, vertical = WadgetSpacing.Medium)
         ) {
+            Text("Categories", style = MaterialTheme.typography.headlineMedium)
+            Spacer(Modifier.height(4.dp))
+            Text(
+                "Set priorities for your budget.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = WadgetPalette.Muted
+            )
+            Spacer(Modifier.height(WadgetSpacing.Small))
+            Text(
+                "${state.tags.size} categories",
+                style = MaterialTheme.typography.labelSmall,
+                color = WadgetPalette.Muted
+            )
+            Spacer(modifier = Modifier.height(WadgetSpacing.Medium))
+
             LazyColumn(
-                modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(bottom = WadgetSpacing.Medium),
+                modifier = Modifier.weight(1f).fillMaxWidth(),
+                contentPadding = PaddingValues(bottom = 2.dp),
                 verticalArrangement = Arrangement.spacedBy(WadgetSpacing.Medium)
             ) {
-                item(key = "heading") {
-                    Column(modifier = Modifier.padding(bottom = WadgetSpacing.Small)) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                "Categories",
-                                style = MaterialTheme.typography.headlineMedium,
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .semantics { heading() }
-                            )
-                            Surface(
-                                color = WadgetColors.Elevated,
-                                contentColor = WadgetColors.Muted,
-                                shape = WadgetShapes.Control
-                            ) {
-                                Text(
-                                    "${state.tags.size}",
-                                    style = MaterialTheme.typography.labelLarge,
-                                    modifier = Modifier.padding(
-                                        horizontal = 12.dp,
-                                        vertical = WadgetSpacing.Small
-                                    )
-                                )
-                            }
-                        }
-                        Spacer(Modifier.height(WadgetSpacing.Small))
-                        Text(
-                            "Fine-tune the priorities behind your budget.",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = WadgetColors.Muted
-                        )
-                    }
-                }
-
-                if (state.tags.isEmpty()) {
-                    item(key = "empty") {
-                        WadgetCard(modifier = Modifier.fillMaxWidth()) {
-                            Column(modifier = Modifier.padding(WadgetSpacing.Large)) {
-                                Text(
-                                    "Make room for what matters",
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                                Spacer(Modifier.height(WadgetSpacing.Small))
-                                Text(
-                                    "Add your first category below to start shaping your budget.",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = WadgetColors.Muted
-                                )
-                            }
-                        }
-                    }
-                }
-
                 items(state.tags, key = { it.id }) { tag ->
                     TagRow(
                         tag = tag,
@@ -230,45 +171,42 @@ fun TagEditorScreen(
                 }
             }
 
-            WadgetCard(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.padding(WadgetSpacing.Medium)) {
-                    Text(
-                        "Add a category",
-                        style = MaterialTheme.typography.titleMedium
+            Spacer(modifier = Modifier.height(WadgetSpacing.Medium))
+            val addTag = {
+                if (newTagName.isNotBlank()) {
+                    onAddTag(newTagName)
+                    newTagName = ""
+                }
+            }
+            val input: @Composable (Modifier) -> Unit = { modifier ->
+                OutlinedTextField(
+                    value = newTagName,
+                    onValueChange = { newTagName = it },
+                    modifier = modifier,
+                    label = { Text("New category") },
+                    maxLines = 3,
+                    shape = MaterialTheme.shapes.small,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = WadgetPalette.Teal,
+                        unfocusedBorderColor = WadgetPalette.Border,
+                        focusedContainerColor = WadgetPalette.Surface,
+                        unfocusedContainerColor = WadgetPalette.Surface,
+                        cursorColor = WadgetPalette.Teal
                     )
-                    Spacer(Modifier.height(WadgetSpacing.Small))
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(WadgetSpacing.Small)
-                    ) {
-                        OutlinedTextField(
-                            value = newTagName,
-                            onValueChange = { newTagName = it },
-                            modifier = Modifier.weight(1f),
-                            label = { Text("New category") },
-                            shape = WadgetShapes.Control,
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedContainerColor = WadgetColors.Elevated,
-                                unfocusedContainerColor = WadgetColors.Elevated,
-                                focusedBorderColor = WadgetColors.Accent,
-                                unfocusedBorderColor = WadgetColors.Border,
-                                focusedLabelColor = WadgetColors.Accent,
-                                unfocusedLabelColor = WadgetColors.Muted,
-                                cursorColor = WadgetColors.Accent
-                            )
-                        )
-
-                        WadgetButton(
-                            text = "Add",
-                            leadingIcon = if (compact) null else Icons.Default.Add,
-                            onClick = {
-                                if (newTagName.isNotBlank()) {
-                                    onAddTag(newTagName)
-                                    newTagName = ""
-                                }
-                            }
-                        )
-                    }
+                )
+            }
+            if (compact) {
+                Column(verticalArrangement = Arrangement.spacedBy(WadgetSpacing.Small)) {
+                    input(Modifier.fillMaxWidth())
+                    WadgetButton(onClick = addTag, modifier = Modifier.fillMaxWidth(), text = "Add")
+                }
+            } else {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(WadgetSpacing.Small)
+                ) {
+                    input(Modifier.weight(1f))
+                    WadgetButton(onClick = addTag, text = "Add")
                 }
             }
         }
