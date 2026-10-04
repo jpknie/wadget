@@ -9,5 +9,6 @@ data class Tag(
     val weight: Double,
     val capCents: Long?,
     val mandatory: Boolean,
+    val softness: Double,
     val mandatoryCents: Long?
 )

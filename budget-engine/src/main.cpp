@@ -4,9 +4,15 @@
 */
 
 #include "BudgetEngine.h"
+#include "Server.h"
 #include <iostream>
 
 int main() {
+
+  Server server;
+  server.start();
+
+/*
   BudgetEngine engine(2000.0);
   engine.addExpense({400.0, "rent"});
   engine.addExpense({150.0, "loan"});
@@ -59,5 +65,5 @@ int main() {
   std::cout << "Total utility (deterministic eval): "
             << engine.evaluateUtility(best) << '\n';
 
-  return 0;
+  return 0; */
 }

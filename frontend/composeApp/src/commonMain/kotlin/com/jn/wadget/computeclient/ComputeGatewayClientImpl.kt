@@ -13,8 +13,10 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
+
+
 class ComputeGatewayClientImpl(
-    private val baseUrl: String = "http://localhost:8080" + ApiConstants.TAGS
+    private val tagBaseUrl: String = "http://localhost:8080" + ApiConstants.TAGS
 ): ComputeGatewayClient {
 
     private val client = HttpClient(provideEngine())
@@ -27,29 +29,29 @@ class ComputeGatewayClientImpl(
     }
 
     override suspend fun getTags(): List<Tag> {
-        return client.get(baseUrl).body()
+        return client.get(tagBaseUrl).body()
     }
 
     override suspend fun getTag(id: String): Tag? {
-        return client.get("$baseUrl/$id").body()
+        return client.get("$tagBaseUrl/$id").body()
     }
 
     override suspend fun addTag(tag: Tag) {
-        client.post(baseUrl) {
+        client.post(tagBaseUrl) {
             setBody(tag)
             contentType(ContentType.Application.Json)
         }
     }
 
     override suspend fun updateTag(tag: Tag) {
-        client.put(baseUrl) {
+        client.put(tagBaseUrl) {
             setBody(tag)
             contentType(ContentType.Application.Json)
         }
     }
 
     override suspend fun deleteTag(id: String) {
-        client.delete("$baseUrl/$id")
+        client.delete("$tagBaseUrl/$id")
     }
 
     override suspend fun computeAllocation(): List<AllocationResult> {

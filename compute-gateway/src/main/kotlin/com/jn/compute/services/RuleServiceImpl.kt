@@ -6,7 +6,7 @@ import com.jn.compute.models.entity.toEntity
 import com.jn.compute.repositories.RuleRepository
 import com.jn.domain.Rule
 import org.springframework.stereotype.Service
-import javax.transaction.Transactional
+import jakarta.transaction.Transactional
 
 @Suppress("unused")
 @Service

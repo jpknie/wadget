@@ -38,7 +38,8 @@ class TagEditorViewModel(private val repository: TagRepository) : ViewModel() {
             weight = 0.0,
             capCents = 0,
             mandatory = false,
-            mandatoryCents = 0
+            mandatoryCents = 0,
+            softness = 0.0
         ))
         loadTags()
     }
@@ -55,6 +56,11 @@ class TagEditorViewModel(private val repository: TagRepository) : ViewModel() {
 
     suspend fun onWeightChange(tag: Tag, weight: Double) {
         repository.update(tag.copy(weight = weight))
+        loadTags()
+    }
+
+    suspend fun onSoftnessChange(tag: Tag, softness: Double) {
+        repository.update(tag.copy(softness = softness))
         loadTags()
     }
 

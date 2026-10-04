@@ -4,7 +4,8 @@ threads = dependency('threads')
 openssl = dependency('openssl')
 
 srcs = files('src/main.cpp',
-             'src/BudgetEngine.cpp'
+             'src/BudgetEngine.cpp',
+             'src/Server.cpp'
              )
 
 # Directory where we'll drop certs

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test
 
 class DomainMappingTest {
     private val mapper = jacksonObjectMapper()
-    private val tag = Tag("tag-1", "Food", 0.123456789012345, null, true, 500)
+    private val tag = Tag("tag-1", "Food", 0.123456789012345, null, true, 0.5, 500)
 
     @Test
     fun tagPersistenceMappingIsLosslessAndPreservesJson() {

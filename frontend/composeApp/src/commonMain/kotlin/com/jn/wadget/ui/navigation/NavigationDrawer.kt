@@ -163,6 +163,12 @@ fun NavigationDrawer(state: MainScreenState,
                                 scope.launch {
                                     tagEditorViewModel.onDeleteTag(tag)
                                 }
+                            },
+
+                            onSoftnessChange = { tag, softness ->
+                                scope.launch {
+                                    tagEditorViewModel.onSoftnessChange(tag, softness)
+                                }
                             }
                         )
                     }

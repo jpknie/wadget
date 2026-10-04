@@ -1,0 +1,114 @@
+diff --git a/compute-gateway/src/main/kotlin/com/jn/compute/models/entity/Tag.kt b/compute-gateway/src/main/kotlin/com/jn/compute/models/entity/Tag.kt
+index 6538ff5..4985d13 100644
+--- a/compute-gateway/src/main/kotlin/com/jn/compute/models/entity/Tag.kt
++++ b/compute-gateway/src/main/kotlin/com/jn/compute/models/entity/Tag.kt
+@@ -11,6 +11,7 @@ class Tag(
+     @Id val id: String,
+     val name: String,
+     val weight: Double,
++    val softness: Double,
+     val capCents: Long?,
+     val mandatory: Boolean,
+     val mandatoryCents: Long?
+diff --git a/frontend/composeApp/src/commonMain/kotlin/com/jn/wadget/repository/TagRepository.kt b/frontend/composeApp/src/commonMain/kotlin/com/jn/wadget/repository/TagRepository.kt
+index 87b197d..f88e879 100644
+--- a/frontend/composeApp/src/commonMain/kotlin/com/jn/wadget/repository/TagRepository.kt
++++ b/frontend/composeApp/src/commonMain/kotlin/com/jn/wadget/repository/TagRepository.kt
+@@ -8,12 +8,6 @@ class TagRepository(
+     private val computeGatewayClient: ComputeGatewayClient
+ ) {
+ 
+-    private val tags = mutableListOf(
+-        Tag(id = generateId(), name = "Food", mandatory = false, capCents = 0, mandatoryCents = 0, weight = 20.0),
+-        Tag(id = generateId(), name = "Fuel", mandatory = false, capCents = 0, mandatoryCents = 0, weight = 10.0),
+-        Tag(id = generateId(), name = "Hygiene", mandatory = false, capCents = 0, mandatoryCents = 0, weight = 100.0)
+-    )
+-
+     suspend fun getAll(): List<Tag> = computeGatewayClient.getTags()
+ 
+     suspend fun add(tag: Tag) {
+diff --git a/frontend/composeApp/src/commonMain/kotlin/com/jn/wadget/state/TagEditorViewModel.kt b/frontend/composeApp/src/commonMain/kotlin/com/jn/wadget/state/TagEditorViewModel.kt
+index a80e17f..ab1221c 100644
+--- a/frontend/composeApp/src/commonMain/kotlin/com/jn/wadget/state/TagEditorViewModel.kt
++++ b/frontend/composeApp/src/commonMain/kotlin/com/jn/wadget/state/TagEditorViewModel.kt
+@@ -58,6 +58,11 @@ class TagEditorViewModel(private val repository: TagRepository) : ViewModel() {
+         loadTags()
+     }
+ 
++    suspend fun onSoftnessChange(tag: Tag, softness: Double) {
++        repository.update(tag.copy(softness = softness))
++        loadTags()
++    }
++
+     suspend fun onDeleteTag(tag: Tag) {
+         repository.delete(tag.id)
+         loadTags()
+diff --git a/frontend/composeApp/src/commonMain/kotlin/com/jn/wadget/ui/TagEditorScreen.kt b/frontend/composeApp/src/commonMain/kotlin/com/jn/wadget/ui/TagEditorScreen.kt
+index 264657d..bf5f774 100644
+--- a/frontend/composeApp/src/commonMain/kotlin/com/jn/wadget/ui/TagEditorScreen.kt
++++ b/frontend/composeApp/src/commonMain/kotlin/com/jn/wadget/ui/TagEditorScreen.kt
+@@ -35,10 +35,14 @@ fun TagRow(
+     onEdit: () -> Unit,
+     onDelete: () -> Unit
+ ) {
+-    var sliderValue by remember(tag.id, tag.weight) {
++    var weightSliderValue by remember(tag.id, tag.weight) {
+         mutableStateOf(tag.weight.toFloat())
+     }
+ 
++    var softnessSliderValue by remember(tag.id, tag.softness) {
++        mutableStateOf(tag.softness.toFloat())
++    }
++
+     WadgetSurface(modifier = Modifier.fillMaxWidth()) {
+         Column(modifier = Modifier.padding(WadgetSpacing.Medium)) {
+             Row(verticalAlignment = Alignment.CenterVertically) {
+@@ -107,15 +111,25 @@ fun TagRow(
+                 )
+             }
+             WadgetSlider(
+-                value = sliderValue,
++                value = weightSliderValue,
+                 onValueChange = {
+-                    sliderValue = it
++                    weightSliderValue = it
+                 },
+                 onValueChangeFinished = {
+-                    onWeightChange(sliderValue.toDouble())
++                    onWeightChange(weightSliderValue.toDouble())
+                 },
+                 description = "Weight for ${tag.name}"
+             )
++            WadgetSlider(
++                value = softnessSliderValue,
++                onValueChange = {
++                    softnessSliderValue = it
++                },
++                onValueChangeFinished = {
++                    onSoftnessChange(softnessSliderValue.toDouble())
++                },
++                description = "Softness for ${tag.name}"
++            )
+         }
+     }
+ }
+@@ -127,6 +141,7 @@ fun TagEditorScreen(
+     onEditTag: (tag: Tag) -> Unit,
+     onToggleMandatory: (tag: Tag, Boolean) -> Unit,
+     onWeightChange: (tag: Tag, Double) -> Unit,
++    onSoftnessChange: (tag: Tag, Double) -> Unit,
+     onDeleteTag: (tag: Tag) -> Unit
+ ) {
+     var newTagName by remember { mutableStateOf("") }
+diff --git a/shared-domain/src/commonMain/kotlin/com/jn/domain/Tag.kt b/shared-domain/src/commonMain/kotlin/com/jn/domain/Tag.kt
+index 3884734..92a2974 100644
+--- a/shared-domain/src/commonMain/kotlin/com/jn/domain/Tag.kt
++++ b/shared-domain/src/commonMain/kotlin/com/jn/domain/Tag.kt
+@@ -9,5 +9,6 @@ data class Tag(
+     val weight: Double,
+     val capCents: Long?,
+     val mandatory: Boolean,
++    val softness: Double,
+     val mandatoryCents: Long?
+ )
+\ No newline at end of file

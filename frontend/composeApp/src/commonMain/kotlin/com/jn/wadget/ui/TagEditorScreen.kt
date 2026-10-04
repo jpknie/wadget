@@ -32,11 +32,16 @@ fun TagRow(
     tag: Tag,
     onToggleMandatory: (Boolean) -> Unit,
     onWeightChange: (Double) -> Unit,
+    onSoftnessChange: (Double) -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit
 ) {
-    var sliderValue by remember(tag.id, tag.weight) {
+    var weightSliderValue by remember(tag.id, tag.weight) {
         mutableStateOf(tag.weight.toFloat())
+    }
+
+    var softnessSliderValue by remember(tag.id, tag.softness) {
+        mutableStateOf(tag.softness.toFloat())
     }
 
     WadgetSurface(modifier = Modifier.fillMaxWidth()) {
@@ -101,20 +106,47 @@ fun TagRow(
                     modifier = Modifier.weight(1f)
                 )
                 Text(
-                    "${sliderValue.toInt()}%",
+                    "${weightSliderValue.toInt()}%",
                     style = MaterialTheme.typography.headlineMedium,
                     color = WadgetPalette.Text
                 )
             }
             WadgetSlider(
-                value = sliderValue,
+                value = weightSliderValue,
                 onValueChange = {
-                    sliderValue = it
+                    weightSliderValue = it
                 },
                 onValueChangeFinished = {
-                    onWeightChange(sliderValue.toDouble())
+                    onWeightChange(weightSliderValue.toDouble())
                 },
                 description = "Weight for ${tag.name}"
+            )
+            Spacer(Modifier.height(WadgetSpacing.Small))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "Softness",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = WadgetPalette.Muted,
+                    modifier = Modifier.weight(1f)
+                )
+                Text(
+                    "${softnessSliderValue.toInt()}%",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = WadgetPalette.Text
+                )
+            }
+            WadgetSlider(
+                value = softnessSliderValue,
+                onValueChange = {
+                    softnessSliderValue = it
+                },
+                onValueChangeFinished = {
+                    onSoftnessChange(softnessSliderValue.toDouble())
+                },
+                description = "Softness for ${tag.name}"
             )
         }
     }
@@ -127,6 +159,7 @@ fun TagEditorScreen(
     onEditTag: (tag: Tag) -> Unit,
     onToggleMandatory: (tag: Tag, Boolean) -> Unit,
     onWeightChange: (tag: Tag, Double) -> Unit,
+    onSoftnessChange: (tag: Tag, Double) -> Unit,
     onDeleteTag: (tag: Tag) -> Unit
 ) {
     var newTagName by remember { mutableStateOf("") }
@@ -140,7 +173,7 @@ fun TagEditorScreen(
                 .fillMaxSize()
                 .padding(horizontal = gutter, vertical = WadgetSpacing.Medium)
         ) {
-            Text("Categories", style = MaterialTheme.typography.headlineMedium)
+            Text("Tags", style = MaterialTheme.typography.headlineMedium)
             Spacer(Modifier.height(4.dp))
             Text(
                 "Set priorities for your budget.",
@@ -149,7 +182,7 @@ fun TagEditorScreen(
             )
             Spacer(Modifier.height(WadgetSpacing.Small))
             Text(
-                "${state.tags.size} categories",
+                "${state.tags.size} tags",
                 style = MaterialTheme.typography.labelSmall,
                 color = WadgetPalette.Muted
             )
@@ -165,6 +198,7 @@ fun TagEditorScreen(
                         tag = tag,
                         onToggleMandatory = { newValue -> onToggleMandatory(tag, newValue) },
                         onWeightChange = { newWeight -> onWeightChange(tag, newWeight) },
+                        onSoftnessChange = { newSoftness -> onSoftnessChange(tag, newSoftness) },
                         onEdit = { onEditTag(tag) },
                         onDelete = { onDeleteTag(tag) }
                     )
