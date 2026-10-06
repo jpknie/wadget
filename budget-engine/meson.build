@@ -25,7 +25,7 @@ certs = custom_target('dev-certs',
 )
 
 exe = executable('budget-engine', srcs,
-  include_directories: include_directories('third_party','include'),
+  include_directories: include_directories('include', 'include/json'),
   dependencies: [threads, openssl],
   install: true
 )

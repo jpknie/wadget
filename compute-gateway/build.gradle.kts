@@ -58,7 +58,8 @@ val integrationTest by sourceSets.creating {
 }
 
 configurations[integrationTest.implementationConfigurationName]
-    .extendsFrom(configurations.testImplementation.get())
+    .extendsFrom(configurations.implementation.get(),
+                configurations.testImplementation.get())
 
 configurations[integrationTest.runtimeOnlyConfigurationName]
     .extendsFrom(configurations.testRuntimeOnly.get())
@@ -71,4 +72,8 @@ tasks.register<Test>("integrationTest") {
     classpath = integrationTest.runtimeClasspath
     
     useJUnitPlatform()
+
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
 }
