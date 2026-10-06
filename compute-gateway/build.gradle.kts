@@ -75,5 +75,6 @@ tasks.register<Test>("integrationTest") {
 
     testLogging {
         events("passed", "skipped", "failed")
+        showStandardStreams = true
     }
 }

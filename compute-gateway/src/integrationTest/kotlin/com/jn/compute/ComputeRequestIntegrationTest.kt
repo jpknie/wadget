@@ -8,8 +8,10 @@ import org.springframework.http.MediaType
 
 
 import com.jn.compute.models.BudgetComputationRequest
+
 import com.jn.compute.models.FixedCost
 import com.jn.compute.models.TagConfig
+import jn.compute.models.BudgetComputationResult
 
 
 class ComputeRequestIntegrationTest {
@@ -62,8 +64,20 @@ class ComputeRequestIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .body(request)
             .retrieve()
-            .body(String::class.java)
+            .body(BudgetComputationResult::class.java)!!
 
-        assertEquals("""{"income":3500.0}""", result)
+
+        assertEquals(1250.0, result.allocations[0].amount, 0.001)
+        assertEquals(1250.0, result.allocations[1].amount, 0.001)
+        assertEquals(2500.0, result.totalAllocated, 0.001)
+        assertEquals(0.0, result.unallocatedAmount, 0.001)
+        assertEquals("groceries", result.allocations[0].tag)
+        assertEquals("fun", result.allocations[1].tag)
+
+        assertEquals(1250.0, result.allocations[0].amount, 0.001)
+        assertEquals(1250.0, result.allocations[1].amount, 0.001)
+
+        assertEquals(2500.0, result.totalAllocated, 0.001)
+        assertEquals(0.0, result.unallocatedAmount, 0.001)
     }
 }

@@ -1,5 +1,7 @@
 
 #include "httplib.h"
+#include "json/json.hpp"
+#include "BudgetEngine.h"
 
 class Server {
     
@@ -7,6 +9,7 @@ class Server {
         Server();
         void start();
 
-    private:    
-    httplib::Server svr;
+    private:
+        nlohmann::json createAllocationsResponse(const std::vector<AllocationResult>& allocations);
+        httplib::Server svr;
 };
