@@ -1,4 +1,4 @@
-package jn.compute.models
+package com.jn.domain
 
 data class Allocation(
     val tag: String,

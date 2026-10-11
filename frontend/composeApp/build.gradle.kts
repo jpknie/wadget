@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.kotlinSerialization)
-    alias(libs.plugins.androidApplication)
+//    alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
@@ -13,11 +13,11 @@ plugins {
 }
 
 kotlin {
-    androidTarget {
+  /*  androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
-    }
+    } */
 
     jvm()
 
@@ -32,7 +32,7 @@ kotlin {
         binaries.executable()
     }
 */
-    val iosArm64Target = iosArm64()
+    /*val iosArm64Target = iosArm64()
     val iosSimTarget = iosSimulatorArm64()
 
     listOf(iosArm64Target, iosSimTarget).forEach { target ->
@@ -40,26 +40,26 @@ kotlin {
             baseName = "ComposeApp"
             isStatic = true
         }
-    }
+    }*/
 
-    val iosMain by sourceSets.creating {
+    /*val iosMain by sourceSets.creating {
         dependsOn(sourceSets.getByName("commonMain"))
         dependencies {
             implementation("io.ktor:ktor-client-ios:2.3.7")
         }
-    }
+    }*/
 
     sourceSets {
         val commonMain by getting
         val jvmMain by getting
-        val androidMain by getting
+//        val androidMain by getting
 
         val jsMain by getting
-        androidMain.dependencies {
+/*        androidMain.dependencies {
             implementation("io.ktor:ktor-client-okhttp:2.3.7")
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
-        }
+        }*/
         commonMain.dependencies {
             implementation(project(":shared-domain"))
             implementation("org.jetbrains.compose.material:material-icons-extended:1.7.3")
@@ -88,11 +88,12 @@ kotlin {
             implementation(libs.kotlinx.coroutinesSwing)
         }
         // Make both iOS targets depend on iosMain
-        val iosArm64Main by getting { dependsOn(iosMain) }
-        val iosSimulatorArm64Main by getting { dependsOn(iosMain) }
+       // val iosArm64Main by getting { dependsOn(iosMain) }
+       // val iosSimulatorArm64Main by getting { dependsOn(iosMain) }
     }
 }
 
+/*
 android {
     namespace = "com.jn.wadget"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -119,10 +120,11 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 }
-
+*/
+/*
 dependencies {
     debugImplementation(libs.compose.uiTooling)
-}
+}*/
 
 compose.desktop {
     application {

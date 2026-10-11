@@ -46,7 +46,7 @@ void BudgetEngine::setCategoryConfigs(const std::vector<CategoryConfig>& configs
 double BudgetEngine::utility(double amount, double weight, double softness) {
     if(softness <= 0.0) softness = 1e-6; // Prevent division by zero
     if(amount < 0.0) amount = 0.0; // Utility is non-decreasing
-    return weight * std::log1p(1.0 + amount / softness);
+    return weight * std::log1p(amount / softness);
 }
 
 

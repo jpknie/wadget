@@ -1,6 +1,6 @@
-package jn.compute.models
+package com.jn.domain
 
-import jn.compute.models.Allocation
+import com.jn.domain.Allocation
 
 data class BudgetComputationResult (
     val allocations: List<Allocation>,
