@@ -4,7 +4,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-
+frontend/kotlin-js-store/
 shared-domain/.idea
 shared-domain/.gradle
 shared-domauin/gradle

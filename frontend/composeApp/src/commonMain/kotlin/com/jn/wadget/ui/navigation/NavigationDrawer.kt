@@ -3,6 +3,7 @@ package com.jn.wadget.ui.navigation
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
@@ -13,9 +14,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.jn.wadget.state.BudgetScreenViewModel
 import com.jn.wadget.state.TagEditorViewModel
 import com.jn.wadget.state.MainScreenState
 import com.jn.wadget.state.Screens
+import com.jn.wadget.ui.BudgetScreen
 import com.jn.wadget.ui.TagEditorScreen
 import com.jn.wadget.ui.theme.WadgetPalette
 import com.jn.wadget.ui.theme.WadgetSpacing
@@ -24,7 +27,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationDrawer(state: MainScreenState,
-                     tagEditorViewModel: TagEditorViewModel) {
+                     tagEditorViewModel: TagEditorViewModel,
+                     budgetViewModel: BudgetScreenViewModel) {
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -78,6 +82,21 @@ fun NavigationDrawer(state: MainScreenState,
                     onClick = {
                         scope.launch {
                             state.currentScreen = Screens.TagScreen
+                            drawerState.close()
+                        }
+                    }
+                )
+
+                NavigationDrawerItem(
+                    modifier = Modifier.padding(horizontal = WadgetSpacing.Small, vertical = 4.dp),
+                    shape = MaterialTheme.shapes.small,
+                    colors = itemColors,
+                    icon = { Icon(Icons.Default.BarChart, contentDescription = null) },
+                    label = { Text("Budget Allocation") },
+                    selected = state.currentScreen == Screens.BudgetScreen,
+                    onClick = {
+                        scope.launch {
+                            state.currentScreen = Screens.BudgetScreen
                             drawerState.close()
                         }
                     }
@@ -172,6 +191,15 @@ fun NavigationDrawer(state: MainScreenState,
                             }
                         )
                     }
+
+                    Screens.BudgetScreen -> {
+                        val budgetState by budgetViewModel.state
+                        BudgetScreen(
+                            budgetState,
+                            budgetViewModel
+                        )
+                    }
+
                     Screens.SettingsScreen -> {
                         Text("SettingsScreen")
                     }

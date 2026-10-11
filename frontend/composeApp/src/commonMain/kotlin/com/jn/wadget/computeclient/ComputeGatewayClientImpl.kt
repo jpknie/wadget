@@ -16,7 +16,7 @@ import io.ktor.serialization.kotlinx.json.*
 
 
 class ComputeGatewayClientImpl(
-    private val tagBaseUrl: String = "http://localhost:8080" + ApiConstants.TAGS
+    private val tagBaseUrl: String = "http://localhost:8081" + ApiConstants.TAGS
 ): ComputeGatewayClient {
 
     private val client = HttpClient(provideEngine())
