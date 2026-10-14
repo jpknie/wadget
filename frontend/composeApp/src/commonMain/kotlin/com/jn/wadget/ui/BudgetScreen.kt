@@ -100,6 +100,8 @@ fun BudgetScreen(
 
             Spacer(Modifier.height(24.dp))
 
+            val allocations = budgetViewModel.getResult()?.allocations
+
             allocations?.forEach { allocation ->
                 BudgetWell(
                     tag = allocation.tag,

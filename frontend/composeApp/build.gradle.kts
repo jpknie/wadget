@@ -22,7 +22,11 @@ kotlin {
     jvm()
 
     js {
-        browser()
+        browser {
+            commonWebpackConfig {
+                devServer = devServer?.copy(port = 8080)
+            }
+        }
         binaries.executable()
     }
 /*

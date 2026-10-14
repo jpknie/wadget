@@ -1,5 +1,6 @@
 package com.jn.wadget.computeclient
 
+import com.jn.domain.BudgetComputationResult
 import com.jn.domain.Tag
 
 class AllocationResult
@@ -12,5 +13,5 @@ interface ComputeGatewayClient {
     suspend fun updateTag(tag: Tag)
 
     suspend fun deleteTag(id: String)
-    suspend fun computeAllocation(): List<AllocationResult>
+    suspend fun computeAllocation(): BudgetComputationResult
 }

@@ -15,6 +15,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.jn.wadget.state.BudgetScreenViewModel
+import com.jn.wadget.state.ComputationsViewModel
 import com.jn.wadget.state.TagEditorViewModel
 import com.jn.wadget.state.MainScreenState
 import com.jn.wadget.state.Screens
@@ -26,8 +27,9 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NavigationDrawer(state: MainScreenState,
+fun AppShell(state: MainScreenState,
                      tagEditorViewModel: TagEditorViewModel,
+                     computationsViewModel: ComputationsViewModel,
                      budgetViewModel: BudgetScreenViewModel) {
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -188,6 +190,29 @@ fun NavigationDrawer(state: MainScreenState,
                                 scope.launch {
                                     tagEditorViewModel.onSoftnessChange(tag, softness)
                                 }
+                            },
+
+                            onCalculatePlan = {
+                                scope.launch {
+                                    try {
+                                        budgetViewModel.setLoading(true)
+                                        budgetViewModel.setResult(computationsViewModel.onCalculatePlan())
+                                    } finally {
+                                        budgetViewModel.setLoading(false)
+                                    }
+                                }
+                            },
+
+                            onCapCentsChange = { tag, capCents ->
+                                scope.launch {
+                                    tagEditorViewModel.onCapCentsChange(tag, capCents)
+                                }
+                            },
+
+                            onMandatoryCentsChange = { tag, mandatoryCents ->
+                                scope.launch {
+                                    tagEditorViewModel.onMandatoryCentsChange(tag, mandatoryCents)
+                                }
                             }
                         )
                     }
@@ -211,23 +236,3 @@ fun NavigationDrawer(state: MainScreenState,
         }
     }
 }
-/*
-Card(modifier = Modifier.fillMaxWidth()) {
-
-    when(state.currentScreen) {
-        Screens.TagScreen -> {
-            val tagState by tagEditorViewModel.state
-            TagEditorScreen(
-                state = tagState,
-                onAddTag = { name ->
-                    scope.launch {
-                        tagEditorViewModel.onAddTag(name)
-                    }
-                },
-                onEditTag = { tagEditorViewModel.onEditTag(it) },
-                onToggleMandatory = { tag, isMandatory -> tagEditorViewModel.onToggleMandatory(tag, isMandatory) },
-                onWeightChange = { tag, weight -> tagEditorViewModel.onWeightChange(tag, weight) }
-            )
-        }
-    }
-}*/

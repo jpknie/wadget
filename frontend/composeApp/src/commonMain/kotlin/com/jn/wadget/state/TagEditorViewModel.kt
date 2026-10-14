@@ -64,8 +64,22 @@ class TagEditorViewModel(private val repository: TagRepository) : ViewModel() {
         loadTags()
     }
 
+    suspend fun onMandatoryCentsChange(tag: Tag, mandatoryCents: Double) {
+        val _mandatoryCents = (mandatoryCents.coerceAtLeast(0.0) * 100).toLong()
+        repository.update(tag.copy(mandatoryCents =_mandatoryCents))
+        loadTags()
+    }
+
+    suspend fun onCapCentsChange(tag: Tag, capCents: Double) {
+        val _capCents = (capCents.coerceAtLeast(0.0) * 100).toLong()
+        repository.update(tag.copy(capCents =_capCents))
+        loadTags()
+    }
+
+
     suspend fun onDeleteTag(tag: Tag) {
         repository.delete(tag.id)
         loadTags()
     }
+
 }

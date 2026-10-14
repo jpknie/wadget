@@ -1,6 +1,7 @@
 package com.jn.wadget.computeclient
 
 
+import com.jn.domain.BudgetComputationResult
 import com.jn.domain.Tag
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -16,7 +17,8 @@ import io.ktor.serialization.kotlinx.json.*
 
 
 class ComputeGatewayClientImpl(
-    private val tagBaseUrl: String = "http://localhost:8081" + ApiConstants.TAGS
+    private val tagBaseUrl: String = "http://localhost:8081" + ApiConstants.TAGS,
+    private val computationsUrl: String = "http://localhost:8081" + ApiConstants.COMPUTATIONS
 ): ComputeGatewayClient {
 
     private val client = HttpClient(provideEngine())
@@ -54,7 +56,7 @@ class ComputeGatewayClientImpl(
         client.delete("$tagBaseUrl/$id")
     }
 
-    override suspend fun computeAllocation(): List<AllocationResult> {
-        TODO("Not yet implemented")
+    override suspend fun computeAllocation(): BudgetComputationResult {
+        return client.get("$computationsUrl/compute").body() // We send the compute request and get the AllocationResult
     }
 }

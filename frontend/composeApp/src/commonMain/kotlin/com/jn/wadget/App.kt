@@ -7,6 +7,7 @@ import com.jn.wadget.computeclient.ComputeGatewayClientImpl
 import com.jn.wadget.repository.SettingsRepository
 import com.jn.wadget.repository.TagRepository
 import com.jn.wadget.state.BudgetScreenViewModel
+import com.jn.wadget.state.ComputationsViewModel
 import com.jn.wadget.state.TagEditorViewModel
 import com.jn.wadget.state.MainScreenViewModel
 import com.jn.wadget.state.SettingsScreenViewModel
@@ -18,6 +19,11 @@ fun App(viewModel: MainScreenViewModel) {
 
     val computeGateway = remember { ComputeGatewayClientImpl() }
     val mainState by viewModel.state
+    val computationsViewModel = remember {
+        ComputationsViewModel(
+            computeGateway
+        )
+    }
     val tagEditorViewModel = remember {
         TagEditorViewModel(
             TagRepository(
@@ -41,6 +47,8 @@ fun App(viewModel: MainScreenViewModel) {
     WadgetTheme {
         MainScreen(mainState,
             tagEditorViewModel,
+            computationsViewModel,
+
             settingsViewModel,
             budgetViewModel)
     }

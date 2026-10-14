@@ -7,11 +7,12 @@ import org.springframework.web.client.RestClient
 import org.springframework.http.MediaType
 
 
+import com.jn.domain.BudgetComputationResult
 import com.jn.compute.models.BudgetComputationRequest
 
 import com.jn.compute.models.FixedCost
 import com.jn.compute.models.TagConfig
-import jn.compute.models.BudgetComputationResult
+
 
 
 class ComputeRequestIntegrationTest {
@@ -60,7 +61,7 @@ class ComputeRequestIntegrationTest {
 
         val result = restClient
             .post()
-            .uri("http://localhost:8081/compute")
+            .uri("http://localhost:8083/compute")
             .contentType(MediaType.APPLICATION_JSON)
             .body(request)
             .retrieve()

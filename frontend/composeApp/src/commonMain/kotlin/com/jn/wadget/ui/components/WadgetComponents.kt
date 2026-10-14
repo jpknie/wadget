@@ -113,11 +113,13 @@ fun WadgetIconAction(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WadgetSlider(
+    enabled: Boolean = true,
     value: Float,
     onValueChange: (Float) -> Unit,
     onValueChangeFinished: () -> Unit,
     description: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    valueRange: ClosedFloatingPointRange<Float> = 0f..100f
 ) {
     val source = remember { MutableInteractionSource() }
     val border = interactionColor(
@@ -128,10 +130,11 @@ fun WadgetSlider(
     )
     val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
     Slider(
+        enabled = enabled,
         value = value,
         onValueChange = onValueChange,
         onValueChangeFinished = onValueChangeFinished,
-        valueRange = 0f..100f,
+        valueRange = valueRange,
         interactionSource = source,
         modifier = modifier.fillMaxWidth().heightIn(min = WadgetSpacing.TouchTarget)
             .hoverable(source)
@@ -148,7 +151,10 @@ fun WadgetSlider(
             // Material owns dragging, thumb placement, keyboard input and range semantics.
             Canvas(Modifier.fillMaxWidth().height(4.dp)) {
                 val y = size.height / 2
-                val fraction = (sliderState.value / 100f).coerceIn(0f, 1f)
+                val fraction = (
+                        (sliderState.value - valueRange.start) /
+                                (valueRange.endInclusive - valueRange.start)
+                        ).coerceIn(0f, 1f)
                 val start = if (rtl) size.width else 0f
                 val end = if (rtl) size.width * (1f - fraction) else size.width * fraction
                 drawLine(

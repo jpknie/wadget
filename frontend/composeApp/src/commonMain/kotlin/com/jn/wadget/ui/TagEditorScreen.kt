@@ -34,14 +34,25 @@ fun TagRow(
     onWeightChange: (Double) -> Unit,
     onSoftnessChange: (Double) -> Unit,
     onEdit: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
+    onMandatoryCentsChange: (Double) -> Unit,
+    onCapCentsChange: (Double) -> Unit
 ) {
+
     var weightSliderValue by remember(tag.id, tag.weight) {
         mutableStateOf(tag.weight.toFloat())
     }
 
     var softnessSliderValue by remember(tag.id, tag.softness) {
         mutableStateOf(tag.softness.toFloat())
+    }
+
+    var capCentsSliderValue by remember(tag.id, tag.capCents) {
+        mutableFloatStateOf((tag.capCents ?: 0L) / 100f)
+    }
+
+    var mandatoryCentsSliderValue by remember(tag.id, tag.mandatoryCents) {
+        mutableFloatStateOf((tag.mandatoryCents ?: 0L) / 100f)
     }
 
     WadgetSurface(modifier = Modifier.fillMaxWidth()) {
@@ -148,6 +159,64 @@ fun TagRow(
                 },
                 description = "Softness for ${tag.name}"
             )
+            Spacer(Modifier.height(WadgetSpacing.Small))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "Maximum amount to allocate",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = WadgetPalette.Muted,
+                    modifier = Modifier.weight(1f)
+                )
+                Text(
+                    "${capCentsSliderValue.toInt()}€",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = WadgetPalette.Text
+                )
+            }
+            WadgetSlider(
+                value = capCentsSliderValue,
+                valueRange = 0f..3500f,
+                onValueChange = {
+                    capCentsSliderValue = it
+                },
+                onValueChangeFinished = {
+                    onCapCentsChange(capCentsSliderValue.toDouble())
+                },
+                description = "Maximum amount for ${tag.name}"
+            )
+            Spacer(Modifier.height(WadgetSpacing.Small))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "Mandatory amount to allocate",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = WadgetPalette.Muted,
+                    modifier = Modifier.weight(1f)
+                )
+                Text(
+                    "${mandatoryCentsSliderValue.toInt()}€",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = WadgetPalette.Text
+                )
+            }
+            WadgetSlider(
+                enabled = !tag.mandatory,
+                value = mandatoryCentsSliderValue,
+                valueRange = 0f..3500f,
+                onValueChange = {
+                    mandatoryCentsSliderValue = it
+                },
+                onValueChangeFinished = {
+                    onMandatoryCentsChange(mandatoryCentsSliderValue.toDouble())
+                },
+                description = "Mandatory amount for ${tag.name}"
+            )
         }
     }
 }
@@ -160,7 +229,10 @@ fun TagEditorScreen(
     onToggleMandatory: (tag: Tag, Boolean) -> Unit,
     onWeightChange: (tag: Tag, Double) -> Unit,
     onSoftnessChange: (tag: Tag, Double) -> Unit,
-    onDeleteTag: (tag: Tag) -> Unit
+    onDeleteTag: (tag: Tag) -> Unit,
+    onCalculatePlan: () -> Unit,
+    onMandatoryCentsChange: (tag: Tag, Double) -> Unit,
+    onCapCentsChange: (tag: Tag, Double) -> Unit
 ) {
     var newTagName by remember { mutableStateOf("") }
 
@@ -200,7 +272,9 @@ fun TagEditorScreen(
                         onWeightChange = { newWeight -> onWeightChange(tag, newWeight) },
                         onSoftnessChange = { newSoftness -> onSoftnessChange(tag, newSoftness) },
                         onEdit = { onEditTag(tag) },
-                        onDelete = { onDeleteTag(tag) }
+                        onDelete = { onDeleteTag(tag) },
+                        onMandatoryCentsChange = { amount -> onMandatoryCentsChange(tag, amount) },
+                        onCapCentsChange = { amount -> onCapCentsChange(tag, amount) }
                     )
                 }
             }
@@ -243,6 +317,19 @@ fun TagEditorScreen(
                     WadgetButton(onClick = addTag, text = "Add")
                 }
             }
+
+            Spacer(Modifier.height(WadgetSpacing.Large))
+
+            HorizontalDivider(color = WadgetPalette.Border)
+
+            Spacer(Modifier.height(WadgetSpacing.Medium))
+
+            WadgetButton(
+                onClick = onCalculatePlan,
+                modifier = Modifier.fillMaxWidth(),
+                text = "Calculate Plan"
+            )
+
         }
     }
 }

@@ -26,5 +26,17 @@ class BudgetScreenViewModel : ViewModel() {
     ))
     val state: State<BudgetScreenState> get() = _state
     val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
+    fun setLoading(loading: Boolean) {
+        _state.value = _state.value.copy(isLoading = loading)
+    }
+
+    fun setResult(result: BudgetComputationResult) {
+        _state.value = _state.value.copy(budgetComputationResult = result)
+    }
+
+    fun getResult() = _state.value.budgetComputationResult
+
+    fun getLoading() = _state.value.isLoading
 }
 
